@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Student.IService;
 
 namespace SS.Controllers
 {
     public class IndexController : Controller
     {
+        private readonly IIndexService _indexService;
         public IActionResult Index()
         {
             return View();
@@ -15,7 +13,7 @@ namespace SS.Controllers
         [HttpPost]
         public ActionResult Index(int id)
         {
-            id = 1;
+            var test1 = _indexService.test1(id);
             return View(id);
         }
 

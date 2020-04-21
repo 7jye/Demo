@@ -11,7 +11,7 @@ namespace Student.Domain
         }
 
         #region DbSet设置
-        public DbSet<StudentInfo> StudentInfo { get; set; }
+        public virtual DbSet<StudentInfo> StudentInfo { get; set; }
 
         #endregion
 

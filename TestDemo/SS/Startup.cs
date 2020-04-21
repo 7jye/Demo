@@ -21,7 +21,7 @@ namespace SS
 
             services.AddDbContext<DemoDbContext>(options =>
             {
-                //options.UseSqlServer(Configuration.get);
+              //  options.UseSqlServer(Configuration.get);
 
             });
 
