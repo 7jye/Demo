@@ -12,5 +12,12 @@ namespace SS.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult Index(int id)
+        {
+            id = 1;
+            return View(id);
+        }
+
     }
 }
