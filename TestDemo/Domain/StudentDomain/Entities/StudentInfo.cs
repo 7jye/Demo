@@ -2,7 +2,7 @@
 
 namespace Student.Domain.Entities
 {
-   public class StudentInfo
+   public class StudentInfo: BaseEntity
     {
         public int Id { get; set; }
 
