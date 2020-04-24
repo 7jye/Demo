@@ -11,7 +11,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\SS.Common\SS.Common.csproj" />
     <ProjectReference Include="..\Domain\StudentDomain\Student.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\ThisInfrastruture\ThisInfrastruture.csproj" />
     <ProjectReference Include="..\Service\Student.IService\Student.IService.csproj" />
+    <ProjectReference Include="..\Service\Student.Service\Student.Service.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="http://json.schemastore.org/appveyor" /></VisualStudio></ProjectExtensions>
 
 </Project>

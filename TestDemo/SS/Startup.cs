@@ -6,25 +6,32 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Student.Domain;
 using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using ThisInfrastruture.DataStructure;
 
 namespace SS
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+        public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CustomSettings>(Configuration.GetSection("CustomSettings"));
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+            services.AddControllersWithViews();
             services.AddDbContext<DemoDbContext>(options =>
             {
-               // options.UseSqlServer(Configuration.get);
-
-            });
-
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            }
+          );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,15 +40,14 @@ namespace SS
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                    );
             });
         }
     }

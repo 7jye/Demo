@@ -1,15 +1,146 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
+    <div id="app">
+        <template>
+            <el-form :inline="true" :model="form" class="demo-form-inline" style="margin-top: -28px;" size="mini">
+                <el-form-item>
+                    <el-input v-model="form.id" placeholder="id"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="form.name" placeholder="name"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="form.createDate" placeholder="date"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @@click="search" icon="el-icon-search">查询</el-button>
+                </el-form-item>
+            </el-form>
+            <el-table size="mini"
+                      ref="tableOne"
+                      v-loading="loading"
+                      element-loading-text="拼命加载中"
+                      element-loading-spinner="el-icon-loading"
+                      :data="tableData"
+                      height="400"
+                      @@selection-change="handleSelectionChange"
+                      style="width: 100%"
+                      :row-key="handleReserve">
+                <el-table-column prop="UserName"
+                                 label="名字"
+                                 width="160">
+                </el-table-column>
+                <el-table-column prop="CreateDate"
+                                 label="时间"
+                                 width="160">
+                </el-table-column>
+                <el-table-column fixed="right"
+                                 label="操作"
+                                 width="100">
+                </el-table-column>
+            </el-table>
+            <div style="text-align: right;margin-top: 10px;">
+                <el-pagination v-if="paginationShow"
+                               @@current-change="currentChange"
+                               @@size-change="sizeChange"
+                               :current-page="currentPage"
+                               :page-size="pageSize"
+                               layout="total, prev, pager, next, jumper"
+                               :total="total">
+                </el-pagination>
+            </div>
+        </template>
+    </div>
+    <!-- import Vue before Element -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+             watch: {
+                'dialogVisible'() {
+                    if (this.dialogVisible === false) {
+                        this.manualMemo = '';
+                        this.multiple = [];
+                    }
+                },
+            },
+            data: {
+                form: {
+                    id: '',
+                    name: '',
+                    createDate:''
+                },
+                 loading: false,
+                tableData: [],
+                // 页容量
+                pageSize: 3,
+                // 当前页
+                currentPage: 1,
+                // 数据的总条数
+                total: 0,
+                // 控制分页的显示隐藏达到刷新的效果
+                paginationShow: true,
+            },
+            methods: {
+                // 查询方法
+                search() {
+                    this.paginationShow = false;
+                    this.currentChange(1);
+                    this.$nextTick(() => {
+                        this.paginationShow = true;
+                    })
+                },
+                load() {
+                    this.loading = true;
+                    axios({
+                        method: 'post',
+                        url: "GetAllStudentInfos",
+                        data: { pageIndex: this.currentPage, pageSize: this.pageSize},
+                    }).then((res) => {
+                        this.loading = false;
+                        this.tableData = res.data.list;
+                        this.total = res.data.total;
+                    }).catch(err => {
+                        this.loading = false;
+                    });
+                },
+                // 当页容量发生变化时触发
+                sizeChange(size) {
+                    this.pageSize = size;
+                    // 重新请求数据
+                    this.load();
+                },
+                // 当页数发生变化时触发
+                currentChange(num) {
+                    this.currentPage = num;
+                    // 重新请求数据
+                    this.load();
+                },
+                handleReserve(row) {
+                    return row.RecordId
+                },
+                //获取多选的ID
+                handleSelectionChange(val) {
+                    this.multipleSelection = val.map(item => {
+                        return item.RecordId
+                    })
+                },
+            }
+        });
+        app.search();
+    </script>
 </body>
 </html>

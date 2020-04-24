@@ -22,5 +22,6 @@ namespace SS
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+           // .ConfigureLogging();
     }
 }
