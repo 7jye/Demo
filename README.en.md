@@ -1,7 +1,7 @@
-# 毕设Demo
+# Demo
 
 #### Description
-毕设Demo
+Demo
 
 #### Software Architecture
 Software architecture description
